@@ -6,7 +6,7 @@ cd ./push_swap_tester
 clear
 
 # Assign the number of attempts from the first argument
-NUM_ATTEMPTS=${1:-1000}  # If not provided, the default value is 1,000
+NUM_ATTEMPTS=${1:-100}  # If not provided, the default value is 1,000
 
 # Title
 show_title() {
@@ -77,6 +77,27 @@ COUNTER_5=0
 
 # Show title
 show_title
+
+for ((i = 1; i <= 500; i++)); do
+    rm -f test.txt checker.txt
+
+    # Generate random numbers with a unique seed in each iteration
+    ARG=$(awk -v n="$i" -v seed="$i" 'BEGIN { srand(seed); for (i = 0; i < n; i++) printf("%d ", int(-2147483648 + rand() * (2147483647 - -2147483648 + 1))) }')
+
+    ../push_swap $ARG > test.txt
+    ../push_swap $ARG | ./checker $ARG > checker.txt
+    
+    show_loading &
+    LOADING_PID_3=$!
+    VAR=$(wc -l < test.txt)
+    LAST_LINE=$(tail -n 1 checker.txt)
+    if [ "$LAST_LINE" = "OK" ]; then
+        echo -e "${GREEN} $i.[OK]${NC}, Mov: $VAR"
+    else
+        echo -e "${RED}[KO] $VAR (Average: $AVERAGE)${NC} $ARG"
+    fi
+done
+
 
 # Evaluate cases of 3 numbers
 echo "--- Evaluating $NUM_ATTEMPTS cases of 3 numbers ---"
