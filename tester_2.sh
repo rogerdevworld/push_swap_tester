@@ -25,7 +25,7 @@ for ((i = 1; i <= CASES; i++)); do
     rm -f test.txt checker.txt
 
     # Generate random numbers with a unique seed in each iteration
-    ARG=$(awk -v n="$RANGE" -v seed="$i" 'BEGIN { srand(seed); for (i = 0; i < n; i++) printf("%d ", int(-2147483648 + rand() * (2147483647 - -2147483648 + 1))) }')
+    ARG=$(awk -v n="$RANGE" 'BEGIN { srand(); for (j = 0; j < n; j++) printf("%d ", int(-2147483648 + rand() * (2147483647 - -2147483648 + 1))) }')
 
     ../push_swap $ARG > test.txt
     ../push_swap $ARG | ./checker $ARG > checker.txt
