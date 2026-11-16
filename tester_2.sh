@@ -44,10 +44,13 @@ for ((i = 1; i <= CASES; i++)); do
 
     AVERAGE=$((SUM / ATTEMPTS))
     LAST_LINE=$(tail -n 1 checker.txt)
+    
+    # MODIFICADO: Ahora el [OK] muestra solo el movimiento y la media, sin imprimir $ARG
     if [ "$VAR" -le "$THRESHOLD" ] && [ "$LAST_LINE" = "OK" ]; then
-        echo -e "${GREEN}[OK] $VAR (Average: $AVERAGE)${NC} $ARG"
+        echo -e "${GREEN}[OK] $VAR (Average: $AVERAGE)${NC}"
         POINTS=$((POINTS + 1))
     else
+        # Si falla (KO), mantiene $ARG visible para que puedas depurarlo
         echo -e "${RED}[KO] $VAR (Average: $AVERAGE)${NC} $ARG"
     fi
 done
